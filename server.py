@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 
 import recastai
 
@@ -17,22 +17,35 @@ columns = ['Age', 'Nationality',
 
 print('Training on past data ... ')
 df = df[columns].to_dict(orient='records')
-# grd = GradientBoostingClassifier(n_estimators=10)
+grd = GradientBoostingClassifier(n_estimators=10)
 vectorizer = DictVectorizer(sparse=False)
 X_train = vectorizer.fit_transform(df)
-print('[Done]')
+print('[Done]\n')
 
-token = '87a01f56c6f1cb0a2020b6568f6b80c5'
+banner = ("""
+
+   ###    ##        #######  ########  ####    ###    
+  ## ##   ##       ##     ## ##     ##  ##    ## ##   
+ ##   ##  ##       ##     ## ##     ##  ##   ##   ##  
+##     ## ##       ##     ## ##     ##  ##  ##     ## 
+######### ##       ##     ## ##     ##  ##  ######### 
+##     ## ##       ##     ## ##     ##  ##  ##     ## 
+##     ## ########  #######  ########  #### ##     ## 
+
+""") # noqa
+
+# token = '87a01f56c6f1cb0a2020b6568f6b80c5'
+token = '39ee3477451f32a0b5917fb01103b66e'
 
 if __name__ == '__main__':
 
+    print()
     while True:
         request = recastai.Request(token, 'en')
         text = raw_input('You: ')
         response = request.converse_text(text)
         print('Bot: %s' % response.reply)
+        if response.intent.slug == 'goodbye':
+            break
 
-    # if response.intent:
-    #     print(response.intent.slug)
-    # if response.intent.slug == 'YOUR_EXPECTED_INTENT':
-    #     """Do your code..."""
+    # TODO: make html page with webbrowser
