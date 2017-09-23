@@ -40,6 +40,7 @@ token = '39ee3477451f32a0b5917fb01103b66e'
 
 if __name__ == '__main__':
 
+    print(banner)
     while True:
         request = recastai.Request(token, 'en')
         text = raw_input('You: ')
