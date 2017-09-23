@@ -1,11 +1,16 @@
 # coding: utf-8
 
+import graphviz
 import recastai
 import webbrowser
 
 from pandas import read_csv
-from sklearn.ensemble import GradientBoostingClassifier
+
 from sklearn.feature_extraction import DictVectorizer
+from sklearn.preprocessing import LabelEncoder
+
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.tree import DecisionTreeClassifier, export_graphviz
 
 print('Reading dummy data ... ')
 df = read_csv('flight_data.csv')
@@ -16,12 +21,30 @@ print('[Done]')
 columns = ['Age', 'Nationality',
            'Sleep quality (1-5)']
 
+le = LabelEncoder()
+y = le.fit_transform(df['Light Color'].values)
+
 print('Training on past data ... ')
 df = df[columns].to_dict(orient='records')
-grd = GradientBoostingClassifier(n_estimators=10)
 vectorizer = DictVectorizer(sparse=False)
-X_train = vectorizer.fit_transform(df)
+X = vectorizer.fit_transform(df)
+
+X_train = X[:-1]
+y_train = y[:-1]
+
+grd = GradientBoostingClassifier(n_estimators=10)
+clf = DecisionTreeClassifier()
+clf.fit_transform(X_train, y_train)
 print('[Done]\n')
+
+dot_data = export_graphviz(clf, out_file=None,
+                           feature_names=vectorizer.feature_names_,
+                           class_names=le.classes_.tolist(),
+                           filled=True, rounded=True,
+                           special_characters=True,
+                           max_depth=3)
+graph = graphviz.Source(dot_data)
+graph.view()
 
 banner = ("""
 
@@ -49,6 +72,5 @@ if __name__ == '__main__':
         if response.intent.slug == 'goodbye':
             webbrowser.open('lighting/cool.html')
             break
-
-
-    # TODO: make html page with webbrowser
+        else:
+            continue
