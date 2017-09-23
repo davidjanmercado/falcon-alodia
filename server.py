@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import recastai
+import webbrowser
 
 from pandas import read_csv
 from sklearn.ensemble import GradientBoostingClassifier
@@ -39,13 +40,14 @@ token = '39ee3477451f32a0b5917fb01103b66e'
 
 if __name__ == '__main__':
 
-    print()
     while True:
         request = recastai.Request(token, 'en')
         text = raw_input('You: ')
         response = request.converse_text(text)
         print('Bot: %s' % response.reply)
         if response.intent.slug == 'goodbye':
+            webbrowser.open('lighting/cool.html')
             break
+
 
     # TODO: make html page with webbrowser
