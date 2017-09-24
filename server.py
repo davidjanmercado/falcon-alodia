@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import graphviz
 import recastai
 import webbrowser
 
@@ -43,8 +42,13 @@ dot_data = export_graphviz(clf, out_file=None,
                            filled=True, rounded=True,
                            special_characters=True,
                            max_depth=3)
-graph = graphviz.Source(dot_data)
-graph.view()
+
+try:
+    import graphviz
+    graph = graphviz.Source(dot_data)
+    graph.view()
+except ImportError as e:
+    pass
 
 banner = ("""
 
