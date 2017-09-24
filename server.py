@@ -33,7 +33,7 @@ y_train = y[:-1]
 
 grd = GradientBoostingClassifier(n_estimators=10)
 clf = DecisionTreeClassifier()
-clf.fit_transform(X_train, y_train)
+clf.fit(X_train, y_train)
 print('[Done]\n')
 
 dot_data = export_graphviz(clf, out_file=None,
