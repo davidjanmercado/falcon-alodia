@@ -4,7 +4,7 @@ body {
   align-items: center;
   justify-content: center;
   background-size: 300% 300%;
-  background-image: linear-gradient(-45deg, #e33b3b 0%, #ff357f 25%, #9844b7 50%, #576fe6 100%);
+  background-image: linear-gradient(-45deg, #FF8866 50%, orange 100% );
   animation: background-shift 20s ease infinite;
 }
 

@@ -16,7 +16,7 @@ print('Reading dummy data ... ')
 df = read_csv('flight_data.csv')
 print('[Done]')
 
-url = 'lighting/cool.html'
+url = 'lighting/cold.html'
 # 'Current time at origin',
 # 'Current time at destination',
 columns = ['Age', 'Nationality',
