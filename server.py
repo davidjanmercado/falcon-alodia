@@ -2,6 +2,7 @@
 
 import recastai
 import webbrowser
+import numpy as np
 
 from pandas import read_csv
 from sys import platform
@@ -16,7 +17,6 @@ print('Reading dummy data ... ')
 df = read_csv('flight_data.csv')
 print('[Done]')
 
-url = 'lighting/cold.html'
 # 'Current time at origin',
 # 'Current time at destination',
 columns = ['Age', 'Nationality',
@@ -38,19 +38,18 @@ clf = DecisionTreeClassifier()
 clf.fit(X_train, y_train)
 print('[Done]\n')
 
-dot_data = export_graphviz(clf, out_file=None,
-                           feature_names=vectorizer.feature_names_,
-                           class_names=le.classes_.tolist(),
-                           filled=True, rounded=True,
-                           special_characters=True,
-                           max_depth=3)
-
-try:
-    import graphviz
-    graph = graphviz.Source(dot_data)
-    # graph.view()
-except ImportError as e:
-    pass
+# dot_data = export_graphviz(clf, out_file=None,
+#                            feature_names=vectorizer.feature_names_,
+#                            class_names=le.classes_.tolist(),
+#                            filled=True, rounded=True,
+#                            special_characters=True,
+#                            max_depth=3)
+# try:
+#     import graphviz
+#     graph = graphviz.Source(dot_data)
+#     # graph.view()
+# except ImportError as e:
+#     pass
 
 banner = ("""
 
@@ -69,18 +68,31 @@ token = '39ee3477451f32a0b5917fb01103b66e'
 
 if __name__ == '__main__':
 
+    is_american = 1
+    is_chinese = 0
+    is_french = 0
+
     print(banner)
     while True:
         request = recastai.Request(token, 'en')
         text = raw_input('You: ')
         response = request.converse_text(text)
-        print('Bot: %s' % response.reply)
         if response.intent.slug == 'goodbye':
+            break
+        elif response.intent.slug == 'rest-yes':
+            print('Bot: What is your age?')
+            age = int(raw_input('You: '))
+            print('Determining the optimal lighting for age %d...'
+                   % (age))
+            y_out = clf.predict(np.array([age, is_american, is_chinese, is_french,
+                                          5.])[None, :])
+            y_out = le.inverse_transform(y_out)[0]
+            url = 'lighting/%s.html' % y_out
             if platform == "linux" or platform == "linux2":
                 webbrowser.open(url)
             else:
                 client = webbrowser.get("open -a /Applications/Firefox.app %s")
                 client.open(url)
-            break
         else:
+            print('Bot: %s' % response.reply)
             continue
