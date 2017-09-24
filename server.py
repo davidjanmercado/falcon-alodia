@@ -4,6 +4,7 @@ import recastai
 import webbrowser
 
 from pandas import read_csv
+from sys import platform
 
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.preprocessing import LabelEncoder
@@ -15,6 +16,7 @@ print('Reading dummy data ... ')
 df = read_csv('flight_data.csv')
 print('[Done]')
 
+url = 'lighting/cool.html'
 # 'Current time at origin',
 # 'Current time at destination',
 columns = ['Age', 'Nationality',
@@ -46,7 +48,7 @@ dot_data = export_graphviz(clf, out_file=None,
 try:
     import graphviz
     graph = graphviz.Source(dot_data)
-    graph.view()
+    # graph.view()
 except ImportError as e:
     pass
 
@@ -74,7 +76,11 @@ if __name__ == '__main__':
         response = request.converse_text(text)
         print('Bot: %s' % response.reply)
         if response.intent.slug == 'goodbye':
-            webbrowser.open('lighting/cool.html')
+            if platform == "linux" or platform == "linux2":
+                webbrowser.open(url)
+            else:
+                client = webbrowser.get("open -a /Applications/Firefox.app %s")
+                client.open(url)
             break
         else:
             continue
